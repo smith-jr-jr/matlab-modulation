@@ -1,0 +1,15 @@
+# MATLAB
+*.asv
+*.m~
+*.mat
+*.fig
+mlock.m
+slprj/
+
+# OS
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Claude
+.claude/
