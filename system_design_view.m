@@ -539,7 +539,7 @@ function data = buildModulatedSignal(modDef)
             data.mappingYLabel = '';
 
         case 'FSK'
-            toneSpacing = params.symbolRate / 2 * 10;
+            toneSpacing = params.symbolRate / 2;
             freqOffsets = ((0:(modDef.M - 1)) - (modDef.M - 1) / 2) * toneSpacing;
             symbolFrequencies = params.carrierFreq + freqOffsets(symbolIndices + 1);
             frequencyWave = repelem(symbolFrequencies, params.samplePerSymbol);
