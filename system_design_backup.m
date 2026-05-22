@@ -767,10 +767,10 @@ end
 
 function result = classifyModulation(fv)
 % CLASSIFYMODULATION 基于特征参数决策树识别调制方式。
-% 输入：fv - featureValues 结构体 (Fe1, Fe3, Fe4, Fe5)
+% 输入：fv - featureValues 结构体 (Fe1, Fe3, Fe4, Fe5, Ff)
 % 输出：result - 含 name (识别名称) 和 path (决策路径) 的结构体
 
-    featNames = {'Fe1', 'Fe3', 'Fe4', 'Fe5'};
+    featNames = {'Fe1', 'Fe3', 'Fe4', 'Fe5', 'Ff'};
     for k = 1:numel(featNames)
         if isnan(fv.(featNames{k}))
             result.name = '无法识别';
@@ -812,16 +812,16 @@ function result = classifyModulation(fv)
                 end
             end
         else
-            if fv.Fe5 > 0.75
-                result.name = '2FSK';
-                result.path = 'Fe1<0.6→Fe3<0.6→Fe5>0.75';
+            if fv.Ff > 1.7e-3
+                result.name = '8PSK';
+                result.path = 'Fe1<0.6→Fe3<0.6→Ff>1.7e-3';
             else
                 if fv.Fe5 < 0.88
                     result.name = '4FSK';
-                    result.path = 'Fe1<0.6→Fe3<0.6→Fe5<0.75→Fe5<0.88';
+                    result.path = 'Fe1<0.6→Fe3<0.6→Ff<1.7e-3→Fe5<0.88';
                 else
-                    result.name = '8PSK';
-                    result.path = 'Fe1<0.6→Fe3<0.6→Fe5<0.75→Fe5>0.88';
+                    result.name = '2FSK';
+                    result.path = 'Fe1<0.6→Fe3<0.6→Ff<1.7e-3→Fe5>0.88';
                 end
             end
         end
