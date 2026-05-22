@@ -768,10 +768,10 @@ end
 
 function result = classifyModulation(fv)
 % CLASSIFYMODULATION 基于特征参数决策树识别调制方式。
-% 输入：fv - featureValues 结构体 (Fe1, Fe2, Fe3, Fe4, Fe5, Fa, Ff)
+% 输入：fv - featureValues 结构体 (Fe1, Fe3, Fe4, Fe5)
 % 输出：result - 含 name (识别名称) 和 path (决策路径) 的结构体
 
-    featNames = {'Fe1', 'Fe2', 'Fe3', 'Fe4', 'Fe5', 'Fa', 'Ff'};
+    featNames = {'Fe1', 'Fe3', 'Fe4', 'Fe5'};
     for k = 1:numel(featNames)
         if isnan(fv.(featNames{k}))
             result.name = '无法识别';
@@ -781,48 +781,48 @@ function result = classifyModulation(fv)
     end
 
     if fv.Fe1 > 0.6
-        if fv.Fe5 < 1.5
-            if fv.Fa > 0.5
-                result.name = '4ASK';
-                result.path = 'Fe1>0.6→Fe5<1.5→Fa>0.5';
+        if fv.Fe4 > 30
+            if fv.Fe5 < 1.7
+                result.name = '2ASK';
+                result.path = 'Fe1>0.6→Fe4>30→Fe5<1.7';
             else
-                result.name = '8ASK';
-                result.path = 'Fe1>0.6→Fe5<1.5→Fa<0.5';
+                result.name = '2PSK';
+                result.path = 'Fe1>0.6→Fe4>30→Fe5>1.7';
             end
         else
-            if fv.Ff > 1e-4
-                result.name = '2PSK';
-                result.path = 'Fe1>0.6→Fe5>1.5→Ff>1e-4';
+            if fv.Fe5 < 0.9
+                result.name = '8ASK';
+                result.path = 'Fe1>0.6→Fe4<30→Fe5<0.9';
             else
-                result.name = '2ASK';
-                result.path = 'Fe1>0.6→Fe5>1.5→Ff<1e-4';
+                result.name = '4ASK';
+                result.path = 'Fe1>0.6→Fe4<30→Fe5>0.9';
             end
         end
     else
-        if fv.Fe2 > 800
-            result.name = '2FSK';
-            result.path = 'Fe1<0.6→Fe2>800';
-        else
-            if fv.Fe3 < 0.6
-                if fv.Ff > 0.3e-4
-                    result.name = '8PSK';
-                    result.path = 'Fe1<0.6→Fe2<800→Fe3<0.6→Ff>0.3e-4';
-                else
-                    result.name = '4FSK';
-                    result.path = 'Fe1<0.6→Fe2<800→Fe3<0.6→Ff<0.3e-4';
-                end
+        if fv.Fe3 > 0.6
+            if fv.Fe4 > 15
+                result.name = '4PSK';
+                result.path = 'Fe1<0.6→Fe3>0.6→Fe4>15';
             else
-                if fv.Fe4 > 15
-                    result.name = '4PSK';
-                    result.path = 'Fe1<0.6→Fe2<800→Fe3>0.6→Fe4>15';
+                if fv.Fe5 < 0.1
+                    result.name = '64QAM';
+                    result.path = 'Fe1<0.6→Fe3>0.6→Fe4<15→Fe5<0.1';
                 else
-                    if fv.Ff > 2.5e-4
-                        result.name = '16QAM';
-                        result.path = 'Fe1<0.6→Fe2<800→Fe3>0.6→Fe4<15→Ff>2.5e-4';
-                    else
-                        result.name = '64QAM';
-                        result.path = 'Fe1<0.6→Fe2<800→Fe3>0.6→Fe4<15→Ff<2.5e-4';
-                    end
+                    result.name = '16QAM';
+                    result.path = 'Fe1<0.6→Fe3>0.6→Fe4<15→Fe5>0.1';
+                end
+            end
+        else
+            if fv.Fe5 > 0.75
+                result.name = '2FSK';
+                result.path = 'Fe1<0.6→Fe3<0.6→Fe5>0.75';
+            else
+                if fv.Fe3 > 0.25
+                    result.name = '4FSK';
+                    result.path = 'Fe1<0.6→Fe3<0.6→Fe5<0.75→Fe3>0.25';
+                else
+                    result.name = '8PSK';
+                    result.path = 'Fe1<0.6→Fe3<0.6→Fe5<0.75→Fe3<0.25';
                 end
             end
         end
