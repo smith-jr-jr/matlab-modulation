@@ -803,12 +803,12 @@ function result = classifyModulation(fv)
                 result.name = '4PSK';
                 result.path = 'Fe1<0.6→Fe3>0.6→Fe4>15';
             else
-                if fv.Fe5 < 0.1
+                if fv.Fe5 < 0.57
                     result.name = '64QAM';
-                    result.path = 'Fe1<0.6→Fe3>0.6→Fe4<15→Fe5<0.1';
+                    result.path = 'Fe1<0.6→Fe3>0.6→Fe4<15→Fe5<0.57';
                 else
                     result.name = '16QAM';
-                    result.path = 'Fe1<0.6→Fe3>0.6→Fe4<15→Fe5>0.1';
+                    result.path = 'Fe1<0.6→Fe3>0.6→Fe4<15→Fe5>0.57';
                 end
             end
         else
