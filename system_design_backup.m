@@ -1,6 +1,5 @@
 function system_design_backup
 
-    rng(0);
     colors = getUiColors();
     fontName = 'Microsoft YaHei UI';
     modulations = getModulationDefinitions();
