@@ -1,0 +1,49 @@
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#e8f5e9"
+    primaryBorderColor: "#2e7d32"
+    primaryTextColor: "#1b5e20"
+    lineColor: "#546e7a"
+    fontSize: 14px
+  look: classic
+---
+flowchart TD
+    Start([开始]) --> N1{Fe1 > 0.6 ?}
+
+    N1 -->|是| N2{Fe4 > 30 ?}
+    N1 -->|否| N5{Fe3 > 0.6 ?}
+
+    N2 -->|是| N3{Fe5 < 1.7 ?}
+    N2 -->|否| N4{Fe5 < 0.9 ?}
+
+    N3 -->|是| L1([2ASK])
+    N3 -->|否| L2([2PSK])
+
+    N4 -->|是| L3([8ASK])
+    N4 -->|否| L4([4ASK])
+
+    N5 -->|是| N6{Fe4 > 15 ?}
+    N5 -->|否| N8{Ff > 1.7×10⁻³ ?}
+
+    N6 -->|是| L5([4PSK])
+    N6 -->|否| N7{Fe5 < 0.57 ?}
+    N7 -->|是| L6([64QAM])
+    N7 -->|否| L7([16QAM])
+
+    N8 -->|是| L8([8PSK])
+    N8 -->|否| N9{Fe5 < 0.88 ?}
+    N9 -->|是| L9([4FSK])
+    N9 -->|否| L10([2FSK])
+
+    style L1 fill:#c8e6c9,stroke:#2e7d32,color:#1b5e20
+    style L2 fill:#c8e6c9,stroke:#2e7d32,color:#1b5e20
+    style L3 fill:#c8e6c9,stroke:#2e7d32,color:#1b5e20
+    style L4 fill:#c8e6c9,stroke:#2e7d32,color:#1b5e20
+    style L5 fill:#c8e6c9,stroke:#2e7d32,color:#1b5e20
+    style L6 fill:#c8e6c9,stroke:#2e7d32,color:#1b5e20
+    style L7 fill:#c8e6c9,stroke:#2e7d32,color:#1b5e20
+    style L8 fill:#c8e6c9,stroke:#2e7d32,color:#1b5e20
+    style L9 fill:#c8e6c9,stroke:#2e7d32,color:#1b5e20
+    style L10 fill:#c8e6c9,stroke:#2e7d32,color:#1b5e20
