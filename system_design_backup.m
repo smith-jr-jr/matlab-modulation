@@ -945,7 +945,7 @@ function computeAndPlotProbability(mainFig)
     hold(ax, 'off');
     set(ax, 'XTick', 1:nMods, 'XTickLabel', modNames, 'XTickLabelRotation', 45);
     xlim(ax, [0.2 nMods + 0.8]);
-    ylim(ax, [0 105]);
+    ylim(ax, [0 98]);
     grid(ax, 'on');
     title(ax, sprintf('12 dB SNR 下各调制识别概率（%d 轮蒙特卡洛）', nTrials), ...
         'FontWeight', 'bold');
