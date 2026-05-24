@@ -889,6 +889,53 @@ function identifyModulation(mainFig)
     end
 end
 
+function computeRecognitionProbabilities(mainFig)
+% COMPUTERECOGNITIONPROBABILITIES 在 12dB SNR 下计算十种调制的识别概率并绘图。
+
+    state = guidata(mainFig);
+    colors = state.colors;
+    ax = state.handles.axes.probability;
+
+    modulations = getModulationDefinitions();
+    numMods = numel(modulations);
+    numTrials = 100;
+    accuracy = zeros(1, numMods);
+
+    updateStatus(mainFig, sprintf('状态：正在计算识别概率（%d 种调制 × %d 次试验）...', ...
+        numMods, numTrials));
+    drawnow;
+
+    for m = 1:numMods
+        correct = 0;
+        for t = 1:numTrials
+            data = buildModulatedSignal(modulations(m));
+            data.noisySignal = addGaussianNoise(data.signal, state.noiseSnrDb);
+            data.noisyFeatureSignal = addGaussianNoise(data.featureSignal, state.noiseSnrDb);
+            data.hasNoise = true;
+            data.noiseSnrDb = state.noiseSnrDb;
+            data = updateCumulantAnalysis(data);
+            result = classifyModulation(data.featureValues);
+            if strcmp(result.name, data.name)
+                correct = correct + 1;
+            end
+        end
+        accuracy(m) = correct / numTrials * 100;
+    end
+
+    cla(ax);
+    set(ax, 'Visible', 'on');
+    bar(ax, accuracy, 'FaceColor', colors.primary, 'EdgeColor', 'none');
+    set(ax, 'XTickLabel', {modulations.name}, 'FontSize', 9);
+    xtickangle(ax, 45);
+    ylim(ax, [0 105]);
+    ylabel(ax, '识别正确率 / %', 'FontSize', 10);
+    title(ax, sprintf('12 dB SNR 下识别概率（%d 次试验/调制）', numTrials), ...
+        'FontSize', 10, 'FontWeight', 'bold');
+    grid(ax, 'on');
+
+    updateStatus(mainFig, '状态：识别概率图已生成。');
+end
+
 function label = getNoiseLabel(data)
 % GETNOISELABEL 返回当前信号的加噪状态标签。
 
