@@ -1097,15 +1097,16 @@ function exportSignalToWorkspace(data)
 end
 
 function showWelcomePlots(axesHandles, colors)
-% SHOWWELCOMEPLOTS 在两个坐标轴中显示界面启动时的提示信息。
+% SHOWWELCOMEPLOTS 在三个坐标轴中显示界面启动时的提示信息。
 % 输入参数：
-%   axesHandles - 两个显示坐标轴的句柄集合。
+%   axesHandles - 三个显示坐标轴的句柄集合。
 %   colors      - 界面颜色配置结构体。
 % 输出参数：
 %   无。函数用于界面初始化和空状态提示。
 
     showPlaceholder(axesHandles.track, '请选择左侧任一调制按钮', colors);
     showPlaceholder(axesHandles.signal, '生成后将在这里显示时域波形', colors);
+    showPlaceholder(axesHandles.probability, '点击"计算识别概率"生成', colors);
 end
 
 function showPlaceholder(axHandle, message, colors)
