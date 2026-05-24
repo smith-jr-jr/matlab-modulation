@@ -272,6 +272,7 @@ function system_design_backup
     state.noiseSnrDb = 12;
     state.current = [];
     state.recognition = [];
+    state.probData = [];
     guidata(mainFig, state);
 
     showWelcomePlots(axesHandles, colors);
