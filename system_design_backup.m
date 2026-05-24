@@ -899,6 +899,64 @@ function label = getNoiseLabel(data)
     end
 end
 
+function computeAndPlotProbability(mainFig)
+% COMPUTEANDPLOTPROBABILITY 蒙特卡洛仿真各调制在 12dB 下的识别概率并绘图。
+
+    state = guidata(mainFig);
+    colors = state.colors;
+    modulations = getModulationDefinitions();
+    nMods = numel(modulations);
+    nTrials = 100;
+    snrDb = state.noiseSnrDb;
+
+    updateStatus(mainFig, '状态：正在计算识别概率…');
+    drawnow;
+
+    accuracy = zeros(1, nMods);
+    for m = 1:nMods
+        correct = 0;
+        for t = 1:nTrials
+            data = buildModulatedSignal(modulations(m));
+            noisySig = addGaussianNoise(data.featureSignal, snrDb);
+            analysis = computeHighOrderCumulants(noisySig);
+            fv = computeFeatureValues(analysis.cumulants, noisySig, data.sampleRate);
+            result = classifyModulation(fv);
+            if strcmp(result.name, modulations(m).name)
+                correct = correct + 1;
+            end
+        end
+        accuracy(m) = correct / nTrials * 100;
+    end
+
+    modNames = {modulations.name};
+    ax = state.handles.axes.probability;
+    cla(ax);
+    set(ax, 'Visible', 'on');
+    hold(ax, 'on');
+    for m = 1:nMods
+        barColor = colors.signal;
+        if accuracy(m) < 100
+            barColor = colors.secondary;
+        end
+        bar(ax, m, accuracy(m), 'FaceColor', barColor, 'EdgeColor', 'none');
+        text(ax, m, accuracy(m) + 2, sprintf('%.0f%%', accuracy(m)), ...
+            'HorizontalAlignment', 'center', 'FontSize', 8, 'Color', colors.text);
+    end
+    hold(ax, 'off');
+    set(ax, 'XTick', 1:nMods, 'XTickLabel', modNames, 'XTickLabelRotation', 45);
+    xlim(ax, [0.2 nMods + 0.8]);
+    ylim(ax, [0 105]);
+    grid(ax, 'on');
+    title(ax, sprintf('12 dB SNR 下各调制识别概率（%d 轮蒙特卡洛）', nTrials), ...
+        'FontWeight', 'bold');
+    ylabel(ax, '识别准确率 / %');
+
+    state.probData = struct('accuracy', accuracy, 'modNames', {modNames}, ...
+        'nTrials', nTrials, 'snrDb', snrDb);
+    guidata(mainFig, state);
+    updateStatus(mainFig, '状态：识别概率计算完成。');
+end
+
 function momentValue = computeMixedMoment(signal, p, q)
 % COMPUTEMIXEDMOMENT 计算 p 阶 q 共轭形式下的混合矩。
 % 输入参数：
@@ -1059,6 +1117,7 @@ function showWelcomePlots(axesHandles, colors)
 
     showPlaceholder(axesHandles.track, '请选择左侧任一调制按钮', colors);
     showPlaceholder(axesHandles.signal, '生成后将在这里显示时域波形', colors);
+    showPlaceholder(axesHandles.probability, '点击「计算识别概率」按钮查看蒙特卡洛仿真结果', colors);
 end
 
 function showPlaceholder(axHandle, message, colors)
