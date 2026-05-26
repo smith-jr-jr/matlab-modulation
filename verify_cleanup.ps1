@@ -1,39 +1,52 @@
-Write-Host "=== 清理验证 ==="
+Write-Host "=== Cleanup Verification ==="
 
 # Check NVIDIA app
 if (Test-Path 'C:\ProgramData\NVIDIA Corporation\NVIDIA app') {
     $size = 0
     try { $size = (Get-ChildItem 'C:\ProgramData\NVIDIA Corporation\NVIDIA app' -Recurse -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum } catch { }
-    Write-Host ("NVIDIA app 目录残留: " + [math]::Round($size/1GB, 2) + " GB")
+    Write-Host ("NVIDIA app left: " + [math]::Round($size/1GB, 2) + " GB")
 } else {
-    Write-Host "NVIDIA app 目录: 已删除 ✓"
+    Write-Host "NVIDIA app: DELETED OK"
 }
 
 # Check Ubisoft
 if (Test-Path 'C:\ProgramData\Ubisoft') {
-    Write-Host "Ubisoft 目录还在!"
+    Write-Host "Ubisoft: STILL EXISTS"
 } else {
-    Write-Host "Ubisoft 目录: 已删除 ✓"
+    Write-Host "Ubisoft: DELETED OK"
 }
 
 # Check NVIDIA Downloader
 if (Test-Path 'C:\ProgramData\NVIDIA Corporation\Downloader') {
-    Write-Host "NVIDIA Downloader 目录还在!"
+    Write-Host "NVIDIA Downloader: STILL EXISTS"
 } else {
-    Write-Host "NVIDIA Downloader 目录: 已删除 ✓"
+    Write-Host "NVIDIA Downloader: DELETED OK"
 }
 
 # Disk space
 $c = Get-PSDrive C
-Write-Host ("`nC盘剩余空间: " + [math]::Round($c.Free/1GB, 2) + " GB (总计 " + [math]::Round($c.Used/1GB + $c.Free/1GB, 0) + " GB)")
+$free = [math]::Round($c.Free/1GB, 2)
+$total = [math]::Round(($c.Used + $c.Free)/1GB, 0)
+Write-Host ("C drive free: " + $free + " GB / " + $total + " GB")
 
 # NVIDIA processes
-Write-Host "`n=== NVIDIA 后台进程 ==="
-Get-Process -ErrorAction SilentlyContinue | Where-Object { $_.ProcessName -match 'nvcontainer|nvdisplay|nvidia' } | ForEach-Object {
-    Write-Host ("  " + $_.ProcessName + " (PID: " + $_.Id + ")")
+Write-Host "`n=== Running NVIDIA Processes ==="
+$procs = @(Get-Process -ErrorAction SilentlyContinue | Where-Object { $_.ProcessName -match 'nvcontainer|nvdisplay|nvidia' })
+if ($procs.Count -gt 0) {
+    foreach ($p in $procs) {
+        Write-Host ("  " + $p.ProcessName + " (PID: " + $p.Id + ")")
+    }
+} else {
+    Write-Host "  (none)"
 }
 
-Write-Host "`n=== NVIDIA 服务状态 ==="
-Get-Service -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'NVDisplay|NVContainer|NvTelemetry|NVLocalSystem' } | ForEach-Object {
-    Write-Host ("  " + $_.DisplayName + " : " + $_.Status)
+# NVIDIA services
+Write-Host "`n=== NVIDIA Services ==="
+$svcs = @(Get-Service -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'NVDisplay|NVContainer|NvTelemetry|NVLocalSystem' })
+if ($svcs.Count -gt 0) {
+    foreach ($s in $svcs) {
+        Write-Host ("  " + $s.DisplayName + " : " + $s.Status)
+    }
+} else {
+    Write-Host "  (none)"
 }
