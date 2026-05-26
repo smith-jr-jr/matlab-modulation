@@ -1,0 +1,33 @@
+﻿**********************
+Windows PowerShell 脚本开始
+开始时间: 20260526215710
+用户名: LAPTOP-8R2P85PV\zjr
+RunAs 用户: LAPTOP-8R2P85PV\zjr
+配置名称: 
+计算机: LAPTOP-8R2P85PV (Microsoft Windows NT 10.0.26200.0)
+主机应用程序: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File E:\ai\ai-claude\matlab\run_cleanup.ps1
+进程 ID: 20168
+PSVersion: 5.1.26100.8115
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.8115
+BuildVersion: 10.0.26100.8115
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+已启动脚本，输出文件为 E:\ai\ai-claude\matlab\cleanup_log.txt
+鍒犻櫎: C:\ProgramData\Ubisoft (11.44 GB)...
+  瀹屾垚.
+鍒犻櫎: C:\ProgramData\NVIDIA Corporation\NVIDIA app (4.4 GB)...
+PS>TerminatingError(Remove-Item):“已停止该运行的命令，因为首选项变量“ErrorActionPreference”或通用参数设置为 Stop: 无法删除项 C:\ProgramData\NVIDIA Corporation\NVIDIA app\MessageBus\MessageBusBroadcast.log: 文件“MessageBusBroadcast.log”正由另一进程使用，因此该进程无法访问此文件。”
+  澶辫触: 无法删除项 C:\ProgramData\NVIDIA Corporation\NVIDIA app\MessageBus\MessageBusBroadcast.log: 文件“MessageBusBroadcast.log”正由另一进程使用，因此该进程无法访问此文件。
+鍒犻櫎: C:\ProgramData\NVIDIA Corporation\Downloader (1.2 GB)...
+  瀹屾垚.
+
+鎬诲叡閲婃斁: 12.64 GB
+C鐩樺墿浣欑┖闂? 44.38 GB
+**********************
+Windows PowerShell 脚本结束
+结束时间: 20260526215714
+**********************
